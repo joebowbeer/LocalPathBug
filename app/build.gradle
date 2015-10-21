@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+ext {
+    syncTime = new Date().format("MM.dd.yy'T'HHmmss")
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -17,16 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
-afterEvaluate {
-    def buildTime = new Date().format("MM.dd.yy'T'HHmmss")
-    android.applicationVariants.all { variant ->
+    applicationVariants.all { variant ->
         variant.outputs.each { output ->
             if (variant.buildType.zipAlignEnabled) {
                 // Rename aligned APK
                 File file = output.outputFile
-                def newName = file.name.replaceAll('.apk', "-${buildTime}.apk")
+                def newName = file.name.replaceAll('.apk', "-${syncTime}.apk")
                 output.outputFile = new File(file.parent, newName)
             }
         }
